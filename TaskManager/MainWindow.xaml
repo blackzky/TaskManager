@@ -1,7 +1,7 @@
 ﻿<Window x:Class="TaskManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Task Manager" Width="800" Height="600" ResizeMode="NoResize">
+        Title="Task Manager" Width="800" Height="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 
     <Grid Background="#252526">
         <ContentControl Content="{Binding }" />

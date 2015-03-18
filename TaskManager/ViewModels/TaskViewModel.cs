@@ -1,113 +1,38 @@
 ﻿using CommonUtil;
 using System.Collections.ObjectModel;
-using System.Diagnostics; /* remove later */
 using System.Windows.Input;
+using TaskManager.Models;
+using TaskManager.ViewModels;
 
 namespace TaskManager
 {
-    public class ApplicationMessage
-    {
-        public enum TYPE 
-        {
-            INFO,
-            ERROR
-        }
-
-        private string _message;
-        private string _type;
-
-        public ApplicationMessage()
-        {
-            _message = "";
-            _type = "#FFFFFF";
-        }
-
-        public ApplicationMessage(TYPE type, string msg)
-        {
-            _message = msg;
-            switch (type) 
-            {
-                case TYPE.INFO:
-                    _type = "Skyblue";
-                    break;
-                case TYPE.ERROR:
-                    _type = "Red";
-                    break;
-                default:
-                    _type = "White";
-                    break;
-            }
-        }
-
-        public string Message
-        {
-            get { return _message; }
-        }
-
-        public string Type
-        {
-            get { return _type.ToString(); }
-        }
-    }
-
-
     public class TaskViewModel : ObservableObject
     {
+        private TaskManagerViewModel _taskManager;
+
         private TaskModel _selectedTask;
+        private ObservableCollection<TaskModel> _taskList;
 
         private ICommand _addTaskCommand;
         private ICommand _removeTaskCommand;
 
-        private ObservableCollection<TaskModel> _taskList;
-        private ObservableCollection<TaskUpdateModel> _taskUpdates;
-
-        private string _details;
-        private ApplicationMessage _applicationMessage;
-
-        public TaskViewModel ()
+        public TaskViewModel(TaskManagerViewModel taskManager)
         {
-            Details = "";
-            ApplicationMessage = new ApplicationMessage(ApplicationMessage.TYPE.INFO, "Task list is Empty. Add a task to begin.");
-
-            _taskUpdates = new ObservableCollection<TaskUpdateModel>();
-
-            // 1. Load Task List from DB or FILE
+            _taskManager = taskManager;
         }
 
-        // Helper Methods
-        public string Details
+        public TaskModel SelectedTask
         {
-            get { return _details; }
+            get { return _selectedTask; }
             set
             {
-                if (value != _details)
+                if (value != _selectedTask)
                 {
-                    _details = value;
-                    OnPropertyChanged("Details");
+                    _selectedTask = value;
+                    OnPropertyChanged("SelectedTask");
                 }
             }
         }
-        public ApplicationMessage ApplicationMessage
-        {
-            get { return _applicationMessage; }
-            set
-            {
-                if (value != _applicationMessage)
-                {
-                    _applicationMessage = value;
-                    OnPropertyChanged("ApplicationMessage");
-                }
-            }
-        }
-        public string Version
-        {
-            get
-            {
-                string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                return string.Format("v{0}", version);
-            }
-        }
-
         public ObservableCollection<TaskModel> TaskList
         {
             get 
@@ -119,6 +44,7 @@ namespace TaskManager
                 return _taskList;
             }
         }
+        
         public ICommand AddTaskCommand
         {
             get
@@ -146,81 +72,34 @@ namespace TaskManager
                 return _removeTaskCommand;
             }
         }
+        
         public void AddTask ()
         {
             TaskModel newTask = new TaskModel();
             TaskList.Add(newTask);
-            ApplicationMessage = new ApplicationMessage(ApplicationMessage.TYPE.INFO, "New task added");
+            _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "New task added");
             SelectedTask = newTask;
         }
+        /* Incomplete */
         public void RemoveTask()
         {
             if (SelectedTask == null)
             {
-                ApplicationMessage = new ApplicationMessage(ApplicationMessage.TYPE.ERROR, "Please select a task to be removed");
+                _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "Please select a task to be removed");
             }
             else
             {
                 // Show Confirmation Box First
                 if (TaskList.Remove(SelectedTask))
                 {
-                    ApplicationMessage = new ApplicationMessage(ApplicationMessage.TYPE.INFO, "Task succefully removed.");
+                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task succefully removed.");
                     SelectedTask = (TaskList.Count > 0) ? TaskList[TaskList.Count - 1] : null;
                 }
                 else
                 {
-                    ApplicationMessage = new ApplicationMessage(ApplicationMessage.TYPE.ERROR, "Failed to remove Task.");
+                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "Failed to remove Task.");
                 }
             }
-        }
-        public TaskModel SelectedTask
-        {
-            get { return _selectedTask; }
-            set
-            {
-                if (value != _selectedTask)
-                {
-                    _selectedTask = value;
-                    OnPropertyChanged("SelectedTask");
-                }
-            }
-        }
-        public ObservableCollection<TaskUpdateModel> TaskUpdates
-        {
-            get
-            {
-                if (_taskUpdates == null)
-                {
-                    //Temporary -- Seed Data
-                    _taskUpdates = new ObservableCollection<TaskUpdateModel>();
-                    _taskUpdates.Add(new TaskUpdateModel(0));
-                    _taskUpdates.Add(new TaskUpdateModel(1));
-                }
-
-                return _taskUpdates;
-            }
-        }
-
-
-    }
-
-    public class PriorityToImageConverter : System.Windows.Data.IValueConverter
-    {
-        public object Convert(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value != null)
-            {
-                return string.Format("/Resources/Images/Priority-{0}.png", value);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

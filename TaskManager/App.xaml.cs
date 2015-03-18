@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using TaskManager.ViewModels;
 
 namespace TaskManager
 {
@@ -19,7 +14,7 @@ namespace TaskManager
             base.OnStartup(e);
 
             MainWindow app = new MainWindow();
-            TaskViewModel context = new TaskViewModel();
+            TaskManagerViewModel context = new TaskManagerViewModel();
             app.DataContext = context;
             app.Show();
         }
