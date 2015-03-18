@@ -10,6 +10,7 @@ namespace TaskManager
         private int taskID;
         private string taskUpdate;
         private DateTime dateUpdated;
+        private string DATE_UPDATED_DATE_FORMAT = "MM/dd/yy";
 
         public TaskUpdateModel(int _taskID)
         {
@@ -23,12 +24,10 @@ namespace TaskManager
         {
             get { return id; }
         }
-
         public int TaskID
         {
             get { return taskID; }
         }
-
         public string TaskUpdate
         {
             get { return taskUpdate; }
@@ -41,8 +40,7 @@ namespace TaskManager
                 }
             }
         }
-
-        public DateTime DateUpdated
+        public DateTime DateUpdatedDate
         {
             get { return dateUpdated; }
             set
@@ -52,6 +50,18 @@ namespace TaskManager
                     dateUpdated = value;
                     OnPropertyChanged("DateUpdated");
                 }
+            }
+        }
+        public string DateUpdated
+        {
+            get
+            {
+                string deadline = "None";
+                if (DateUpdatedDate != null)
+                {
+                    deadline = DateUpdatedDate.ToString(DATE_UPDATED_DATE_FORMAT);
+                }
+                return deadline;
             }
         }
     }

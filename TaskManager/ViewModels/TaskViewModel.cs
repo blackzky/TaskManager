@@ -29,6 +29,7 @@ namespace TaskManager
                 if (value != _selectedTask)
                 {
                     _selectedTask = value;
+                    _taskManager.TaskUpdate.UpdateTaskUpdatesList();
                     OnPropertyChanged("SelectedTask");
                 }
             }
@@ -90,10 +91,17 @@ namespace TaskManager
             else
             {
                 // Show Confirmation Box First
+                int taskID = SelectedTask.ID;
                 if (TaskList.Remove(SelectedTask))
                 {
-                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task succefully removed.");
-                    SelectedTask = (TaskList.Count > 0) ? TaskList[TaskList.Count - 1] : null;
+                    int updatesRemoved = 0;
+                    SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
+                    updatesRemoved = _taskManager.TaskUpdate.RemoveAllUpdatesOfTask(taskID);
+
+                    _taskManager.ApplicationMessage = new ApplicationMessageModel(
+                        ApplicationMessageModel.TYPE.INFO, 
+                        string.Format("Task succefully removed. {0} update/s was also removed", updatesRemoved)
+                    );
                 }
                 else
                 {

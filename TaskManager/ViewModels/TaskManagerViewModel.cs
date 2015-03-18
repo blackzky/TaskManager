@@ -26,7 +26,6 @@ namespace TaskManager.ViewModels
                 return _task;
             }
         }
-
         public TaskUpdateViewModel TaskUpdate
         {
             get
@@ -35,7 +34,6 @@ namespace TaskManager.ViewModels
                 return _taskUpdate;
             }
         }
-
 
         // Helper Methods
         public string Details
