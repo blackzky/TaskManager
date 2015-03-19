@@ -4,6 +4,22 @@
                     xmlns:helper="clr-namespace:TaskManager.Helpers">
 
     <DataTemplate DataType="{x:Type local:TaskManagerViewModel}">
+        <DataTemplate.Resources>
+            <Style TargetType="{x:Type DataGrid}">
+                <Setter Property="CanUserResizeColumns" Value="False" />
+                <Setter Property="CanUserReorderColumns" Value="False" />
+                <Setter Property="CanUserResizeRows" Value="False" />
+                <Setter Property="AutoGenerateColumns" Value="False" />
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="CanUserAddRows" Value="False" />
+                <Setter Property="SelectionMode" Value="Single" />
+                <Setter Property="SelectionUnit" Value="FullRow" />
+                <Setter Property="Width" Value="390" />
+                <Setter Property="MaxWidth" Value="390" />
+                <Setter Property="Height" Value="310" />
+            </Style>
+        </DataTemplate.Resources>
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -25,7 +41,7 @@
 
             <!-- Task -->
             <Label Grid.Column="0" Grid.Row="1" Foreground="#FFFFFF">Task List</Label>
-            <DataGrid Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Task.TaskList}" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding Task.SelectedTask, Mode=TwoWay}" SelectionMode="Single" SelectionUnit="FullRow" CanUserAddRows="False" Width="390" MaxWidth="390" Height="370">
+            <DataGrid Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Task.TaskList}" SelectedItem="{Binding Task.SelectedTask, Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="Priority"  IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
@@ -58,14 +74,49 @@
                 <Button Margin="5 0 10 0" Command="{Binding Path=Task.RemoveTaskCommand}">Remove Task</Button>
             </StackPanel>
 
+            <!-- New Task Options -->
+            <GroupBox Grid.Column="0" Grid.Row="4" Margin="5 0 0 0" IsEnabled="{Binding Path=Task.HasTaskSelected, Mode=OneWay}">
+                <GroupBox.Header>
+                    <Label Foreground="#FFFFFF">Task</Label>
+                </GroupBox.Header>
+                
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <DockPanel>
+                        <DockPanel DockPanel.Dock="Left">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                                <Label Foreground="#FFFFFF">Priority</Label>
+                                <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <DockPanel DockPanel.Dock="Right">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                <Label Foreground="#FFFFFF">Status</Label>
+                                <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" />
+                            </StackPanel>
+                        </DockPanel>
+
+                    </DockPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel>
+                            <Label Margin="0 5 0 0" Foreground="#FFFFFF" DockPanel.Dock="Left" HorizontalAlignment="Left">Task</Label>
+                            <DatePicker Margin="0 5 5 5" HorizontalAlignment="Right"  SelectedDate="{Binding Path=Task.SelectedTask.DeadlineDate, Mode=TwoWay}" DockPanel.Dock="Right" />
+                            <Label Margin="0 5 0 0" Foreground="#FFFFFF" DockPanel.Dock="Right" HorizontalAlignment="Right">Deadline</Label>
+                        </DockPanel>
+                        <TextBox Margin="5 0 5 5" Text="{Binding Path=Task.SelectedTask.TaskDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
             <!-- GridSplitter -->
             <GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" IsEnabled="False" Width="3" Background="#FFF"/>
 
             <!-- Task Updates -->
             <Label Grid.Column="2" Grid.Row="1" Foreground="#FFFFFF">Task Updates</Label>
-            <DataGrid Grid.Column="2" Grid.Row="2" ItemsSource="{Binding TaskUpdate.TaskUpdates}" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding TaskUpdate.SelectedTaskUpdate, Mode=TwoWay}" SelectionMode="Single" SelectionUnit="FullRow" CanUserAddRows="False" Width="390" MaxWidth="390" Height="370">
+            <DataGrid Grid.Column="2" Grid.Row="2" ItemsSource="{Binding TaskUpdate.TaskUpdates}" SelectedItem="{Binding TaskUpdate.SelectedTaskUpdate, Mode=TwoWay}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding DateUpdated}" />
+                    <DataGridTextColumn Header="Date" Width="55" Binding="{Binding DateUpdated}" />
                     <DataGridTextColumn Header="Updated" Binding="{Binding TaskUpdate}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
@@ -75,9 +126,7 @@
                 <Button Margin="5 0 20 0" Command="{Binding Path=TaskUpdate.RemoveTaskUpdateCommand}">Remove Update</Button>
             </StackPanel>
 
-
             <!-- Bottom Content -->
-            <TextBox Margin="5 5 20 0" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" IsReadOnly="True" TextWrapping="Wrap" Height="50" MaxHeight="50" VerticalScrollBarVisibility="Auto" Text="{Binding Details}" />
             <DockPanel Margin="0 0 20 0" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3" Width="800">
                 <Label Margin="5 0 0 0" HorizontalAlignment="Left" DockPanel.Dock="Left" Foreground="{Binding Path=ApplicationMessage.Type}" Content="{Binding Path=ApplicationMessage.Message}" />
                 <Label Margin="0 0 20 10" HorizontalAlignment="Right" DockPanel.Dock="Right" Foreground="#FFFFFF" Content="{Binding Version}" />

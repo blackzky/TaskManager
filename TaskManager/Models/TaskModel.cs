@@ -1,5 +1,6 @@
 ﻿using CommonUtil;
 using System;
+using System.Collections.Generic;
 
 namespace TaskManager
 {
@@ -10,30 +11,40 @@ namespace TaskManager
         private Priority taskPriority;
         private Status taskStatus;
         private string taskDetail;
+        private string deadline;
         private DateTime deadlineDate;
         private string DEADLINE_DATE_FORMAT = "MM/dd/yy";
 
         public enum Status : int
         {
-            COMPLETED,
-            NOT_STARTED,
-            WORKING,
-            CANCELED
+            NOT_STARTED = 0,
+            WORKING = 1,
+            COMPLETED = 2,
+            CANCELLED = 3
         }
         public enum Priority : int
         {
-            HIGH,
+            LOW,
             MEDIUM,
-            LOW
+            HIGH
         }
         
+        public IEnumerable<string> PriorityEnum { get; set; }
+        public IEnumerable<string> StatusEnum { get; set; }
+
         public TaskModel() 
         {
             id = BASE_ID++;
             taskPriority = Priority.LOW;
             taskStatus = Status.NOT_STARTED;
             taskDetail = "Task";
-            deadlineDate = DateTime.Now;
+            DeadlineDate = DateTime.Now.AddDays(-1);
+
+            var priorityEnum = Enum.GetNames(typeof(Priority));
+            PriorityEnum = priorityEnum;
+
+            var statusEnum = Enum.GetNames(typeof(Status));
+            StatusEnum = statusEnum;
         }
         public int ID 
         {
@@ -78,29 +89,43 @@ namespace TaskManager
         }
         public string Deadline
         {
-            get {
-                string deadline = "None";
-                if (DeadlineDate != null)
+            get { return deadline; }
+            set 
+            {
+                if (value != deadline)
                 {
-                    deadline = DeadlineDate.ToString(DEADLINE_DATE_FORMAT);
+                    deadline = value;
+                    OnPropertyChanged("Deadline");
                 }
-                return deadline;
             }
         }
         public DateTime DeadlineDate
         {
-            get { 
-                return deadlineDate; 
-            }
+            get { return deadlineDate; }
             set
             {
                 if (value != deadlineDate)
                 {
                     deadlineDate = value;
+                    Deadline = GetDeadline();
                     OnPropertyChanged("DeadlineDate");
                 }
             }
         }
+        private string GetDeadline() 
+        {
+            string _deadline = "None";
+            if (DeadlineDate != null)
+            {
+                int diff = DateTime.Compare(DateTime.Now.Date, DeadlineDate.Date);
+                if (diff <= 0) 
+                {
+                    _deadline = DeadlineDate.ToString(DEADLINE_DATE_FORMAT);
+                }
+            }
+            return _deadline;
+        }
+
         public override string ToString()
         {
             return taskDetail;

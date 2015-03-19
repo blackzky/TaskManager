@@ -16,6 +16,8 @@ namespace TaskManager
         private ICommand _addTaskCommand;
         private ICommand _removeTaskCommand;
 
+        private bool _hasTaskSelected;
+
         public TaskViewModel(TaskManagerViewModel taskManager)
         {
             _taskManager = taskManager;
@@ -29,6 +31,7 @@ namespace TaskManager
                 if (value != _selectedTask)
                 {
                     _selectedTask = value;
+                    HasTaskSelected = (value != null);
                     _taskManager.TaskUpdate.UpdateTaskUpdatesList();
                     OnPropertyChanged("SelectedTask");
                 }
@@ -112,6 +115,19 @@ namespace TaskManager
                 else
                 {
                     _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "Failed to remove Task.");
+                }
+            }
+        }
+
+        public bool HasTaskSelected {
+            get { return _hasTaskSelected; }
+            set
+            {
+                if (value != _hasTaskSelected)
+                {
+                    _hasTaskSelected = value;
+                    _taskManager.TaskUpdate.UpdateTaskUpdatesList();
+                    OnPropertyChanged("HasTaskSelected");
                 }
             }
         }
