@@ -74,7 +74,6 @@ namespace TaskManager
         private string GetDateUpdated()
         {
             string dateUpdated = "None";
-            System.Diagnostics.Debug.WriteLine("date udpated...");
             if (DateUpdatedDate != null) { dateUpdated = DateUpdatedDate.ToString(DATE_UPDATED_DATE_FORMAT); }
             return dateUpdated;
         }

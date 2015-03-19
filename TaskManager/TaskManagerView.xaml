@@ -21,6 +21,12 @@
             <Style TargetType="{x:Type Label}">
                 <Setter Property="Foreground" Value="White" />
             </Style>
+            
+            <Style TargetType="{x:Type DataGridCell}">
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderBrush" Value="White" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
         </DataTemplate.Resources>
         <Grid>
             <Grid.RowDefinitions>
@@ -49,7 +55,7 @@
                                 <DataTemplate.Resources>
                                     <helper:PriorityToImageConverter x:Key="imageConverter" />
                                 </DataTemplate.Resources>
-                                <Image Source="{Binding Path=TaskPriority, Converter={StaticResource imageConverter}}" Width="16" Height="16" />
+                                <Image Source="{Binding Path=TaskPriority, Converter={StaticResource imageConverter}}" Width="32" Height="32" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -60,13 +66,30 @@
                                 <DataTemplate.Resources>
                                     <helper:StatusToImageConverter x:Key="imageConverter" />
                                 </DataTemplate.Resources>
-                                <Image Source="{Binding Path=TaskStatus, Converter={StaticResource imageConverter}}" Width="16" Height="16" />
+                                <Image Source="{Binding Path=TaskStatus, Converter={StaticResource imageConverter}}" Width="32" Height="32" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Deadline" Binding="{Binding Deadline}" />
-                    <DataGridTextColumn Header="Task" Binding="{Binding TaskDetail}" Width="*" />
+                    <DataGridTemplateColumn Header="Deadline"  IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Deadline}" Margin="0 8 0 8" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Task"  IsReadOnly="True" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DataTemplate.Resources>
+                                    <helper:TaskDetailToTruncatedStringConverter x:Key="truncatedDetail" />
+                                </DataTemplate.Resources>
+                                <TextBlock Text="{Binding Path=TaskDetail, Converter={StaticResource truncatedDetail}}" Margin="0 8 0 8"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Margin="0 10 0 10" Grid.Column="0" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -117,7 +140,16 @@
             <DataGrid Margin="5 0 20 0" Grid.Column="2" Grid.Row="2" ItemsSource="{Binding TaskUpdate.TaskUpdates}" SelectedItem="{Binding TaskUpdate.SelectedTaskUpdate, Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date" Width="55" Binding="{Binding DateUpdated}" />
-                    <DataGridTextColumn Header="Updated" Binding="{Binding TaskUpdate}" Width="*"/>
+                    <DataGridTemplateColumn Header="Update"  IsReadOnly="True" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DataTemplate.Resources>
+                                    <helper:TaskUpdateToTruncatedStringConverter x:Key="truncatedUpdate" />
+                                </DataTemplate.Resources>
+                                <TextBlock Text="{Binding Path=TaskUpdate, Converter={StaticResource truncatedUpdate}}"  />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
             
