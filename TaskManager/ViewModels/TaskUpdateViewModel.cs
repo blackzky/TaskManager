@@ -17,6 +17,8 @@ namespace TaskManager.ViewModels
         private ICommand _addTaskUpdateCommand;
         private ICommand _removeTaskUpdateCommand;
 
+        private bool _hasTaskUpdateSelected;
+
         public TaskUpdateViewModel(TaskManagerViewModel taskManager)
         {
             _taskManager = taskManager;
@@ -30,6 +32,7 @@ namespace TaskManager.ViewModels
                 if (value != _selectedTaskUpdate)
                 {
                     _selectedTaskUpdate = value;
+                    HasTaskUpdateSelected = (_selectedTaskUpdate != null);
                     OnPropertyChanged("SelectedTaskUpdate");
                 }
             }
@@ -138,6 +141,18 @@ namespace TaskManager.ViewModels
             if (TaskUpdates.Count > 0) 
             {
                 SelectedTaskUpdate = TaskUpdates[0];
+            }
+        }
+        public bool HasTaskUpdateSelected
+        {
+            get { return _hasTaskUpdateSelected; }
+            set
+            {
+                if (value != _hasTaskUpdateSelected)
+                {
+                    _hasTaskUpdateSelected = value;
+                    OnPropertyChanged("HasTaskUpdateSelected");
+                }
             }
         }
     }

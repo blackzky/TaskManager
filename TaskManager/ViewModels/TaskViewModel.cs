@@ -31,7 +31,7 @@ namespace TaskManager
                 if (value != _selectedTask)
                 {
                     _selectedTask = value;
-                    HasTaskSelected = (value != null);
+                    HasTaskSelected = (_selectedTask != null);
                     _taskManager.TaskUpdate.UpdateTaskUpdatesList();
                     OnPropertyChanged("SelectedTask");
                 }
