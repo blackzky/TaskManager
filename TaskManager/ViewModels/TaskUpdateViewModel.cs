@@ -22,7 +22,6 @@ namespace TaskManager.ViewModels
             _taskManager = taskManager;
             _allTaskUpdates = new ObservableCollection<TaskUpdateModel>();
         }
-
         public TaskUpdateModel SelectedTaskUpdate
         {
             get { return _selectedTaskUpdate; }
@@ -86,14 +85,15 @@ namespace TaskManager.ViewModels
         {
             if (SelectedTaskUpdate == null)
             {
-                _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "Please select a task update to be removed");
+                _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "Please select a Task Update to be removed.");
             }
             else
             {
                 // Show Confirmation Box First
-                if (TaskUpdates.Remove(SelectedTaskUpdate) && _allTaskUpdates.Remove(SelectedTaskUpdate))
+                if (_allTaskUpdates.Remove(SelectedTaskUpdate))
                 {
-                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task succefully removed update.");
+                    UpdateTaskUpdatesList();
+                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task update succefully removed.");
                     SelectedTaskUpdate = (TaskUpdates.Count > 0) ? TaskUpdates[TaskUpdates.Count - 1] : null;
                 }
                 else
@@ -135,6 +135,10 @@ namespace TaskManager.ViewModels
         {
             TaskUpdates.Clear();
             FindTaskUpdates();
+            if (TaskUpdates.Count > 0) 
+            {
+                SelectedTaskUpdate = TaskUpdates[0];
+            }
         }
     }
 }

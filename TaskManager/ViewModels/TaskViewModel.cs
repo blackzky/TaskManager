@@ -98,9 +98,15 @@ namespace TaskManager
                     SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
                     updatesRemoved = _taskManager.TaskUpdate.RemoveAllUpdatesOfTask(taskID);
 
+                    string message = "Task succefully removed. ";
+                    if (updatesRemoved > 0)
+                    {
+                        message = string.Format("{0} {1} Task Update{2} was also removed", message, updatesRemoved, (updatesRemoved > 1 ? "s" : ""));
+                    }
+
                     _taskManager.ApplicationMessage = new ApplicationMessageModel(
-                        ApplicationMessageModel.TYPE.INFO, 
-                        string.Format("Task succefully removed. {0} update/s was also removed", updatesRemoved)
+                        ApplicationMessageModel.TYPE.INFO,
+                        message
                     );
                 }
                 else
