@@ -49,6 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Task-Manager-Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -71,6 +74,7 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\Converters.cs" />
+    <Compile Include="Helpers\PersistentData.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\ResourceManager.cs" />
     <Compile Include="Models\ApplicationMessageModel.cs" />
@@ -148,6 +152,9 @@
     <Resource Include="Resources\Images\Priority-HIGH.png" />
     <Resource Include="Resources\Images\Priority-LOW.png" />
     <Resource Include="Resources\Images\Priority-MEDIUM.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Task-Manager-Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

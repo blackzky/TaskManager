@@ -24,21 +24,28 @@ namespace TaskManager
         }
         public enum Priority : int
         {
-            LOW,
-            MEDIUM,
-            HIGH
+            LOW = 0,
+            MEDIUM = 1,
+            HIGH = 2
         }
         
         public IEnumerable<string> PriorityEnum { get; set; }
         public IEnumerable<string> StatusEnum { get; set; }
 
-        public TaskModel() 
+        public TaskModel()
+            : this(BASE_ID++, Priority.LOW, Status.NOT_STARTED, "Task", DateTime.MinValue) { }
+
+        //<summary>
+        // For Persistent Data.
+        //</summary>
+        public TaskModel(int _id, Priority _taskPriority, Status _taskStatus, string _taskDetail, DateTime _deadlineDate)
         {
-            id = BASE_ID++;
-            taskPriority = Priority.LOW;
-            taskStatus = Status.NOT_STARTED;
-            taskDetail = "Task";
-            DeadlineDate = DateTime.Now.AddDays(-1);
+            id = _id;
+            taskPriority = _taskPriority;
+            taskStatus = _taskStatus;
+            taskDetail = _taskDetail;
+
+            DeadlineDate = (_deadlineDate == DateTime.MinValue ? DateTime.Now.AddDays(-1) : _deadlineDate);
 
             var priorityEnum = Enum.GetNames(typeof(Priority));
             PriorityEnum = priorityEnum;
@@ -46,10 +53,10 @@ namespace TaskManager
             var statusEnum = Enum.GetNames(typeof(Status));
             StatusEnum = statusEnum;
         }
+
         public int ID 
         {
             get { return id; }
-            
         }
         public Priority TaskPriority 
         {
