@@ -45,9 +45,17 @@
             if (value != null)
             {
                 string update = value.ToString();
-                if (update.Length >= TRUNCATE_LENGTH) 
+                string[] subString = update.Split('\r');
+                if (subString.Length > 1)
                 {
-                    update = string.Format("{0} [...]", StringTools.Truncate(update, TRUNCATE_LENGTH));
+                    update = string.Format("{0} [...]", StringTools.Truncate(subString[0], TRUNCATE_LENGTH));
+                }
+                else
+                {
+                    if (update.Length >= TRUNCATE_LENGTH)
+                    {
+                        update = string.Format("{0} [...]", StringTools.Truncate(update, TRUNCATE_LENGTH));
+                    }
                 }
                 return update;
             }

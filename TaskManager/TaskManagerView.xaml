@@ -21,159 +21,145 @@
             <Style TargetType="{x:Type Label}">
                 <Setter Property="Foreground" Value="White" />
             </Style>
-            
             <Style TargetType="{x:Type DataGridCell}">
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="BorderBrush" Value="White" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </DataTemplate.Resources>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="398" />
-                <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="398" />
-            </Grid.ColumnDefinitions>
-
-            <Label FontSize="24" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">Task Manager</Label>
-
-            <!-- Task -->
-            <Label Grid.Column="0" Grid.Row="1">Task List</Label>
-            <DataGrid Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Task.TaskList}" SelectedItem="{Binding Task.SelectedTask, Mode=TwoWay}">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Priority"  IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataTemplate.Resources>
-                                    <helper:PriorityToImageConverter x:Key="imageConverter" />
-                                </DataTemplate.Resources>
-                                <Image Source="{Binding Path=TaskPriority, Converter={StaticResource imageConverter}}" Width="32" Height="32" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Status"  IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataTemplate.Resources>
-                                    <helper:StatusToImageConverter x:Key="imageConverter" />
-                                </DataTemplate.Resources>
-                                <Image Source="{Binding Path=TaskStatus, Converter={StaticResource imageConverter}}" Width="32" Height="32" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Deadline"  IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Deadline}" Margin="0 8 0 8" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Task"  IsReadOnly="True" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataTemplate.Resources>
-                                    <helper:TaskDetailToTruncatedStringConverter x:Key="truncatedDetail" />
-                                </DataTemplate.Resources>
-                                <TextBlock Text="{Binding Path=TaskDetail, Converter={StaticResource truncatedDetail}}" Margin="0 8 0 8"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    
-                </DataGrid.Columns>
-            </DataGrid>
-            <StackPanel Margin="0 10 0 10" Grid.Column="0" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="10 0 5 0" Command="{Binding Path=Task.AddTaskCommand}">Add Task</Button>
-                <Button Margin="5 0 10 0" Command="{Binding Path=Task.RemoveTaskCommand}">Remove Task</Button>
-            </StackPanel>
-
-            <!-- New Task Options -->
-            <GroupBox Grid.Column="0" Grid.Row="4" Margin="5 0 0 0" IsEnabled="{Binding Path=Task.HasTaskSelected, Mode=OneWay}">
-                <GroupBox.Header>
-                    <Label Foreground="#FFFFFF">Task</Label>
-                </GroupBox.Header>
-                
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-                    <DockPanel>
-                        <DockPanel DockPanel.Dock="Left">
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
-                                <Label Foreground="#FFFFFF">Priority</Label>
-                                <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" />
-                            </StackPanel>
-                        </DockPanel>
-
-                        <DockPanel DockPanel.Dock="Right">
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                <Label Foreground="#FFFFFF">Status</Label>
-                                <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" />
-                            </StackPanel>
-                        </DockPanel>
-
-                    </DockPanel>
-
-                    <StackPanel Orientation="Vertical">
-                        <DockPanel>
-                            <Label Margin="0 5 0 0" DockPanel.Dock="Left" HorizontalAlignment="Left">Task</Label>
-                            <DatePicker Margin="0 5 5 5" HorizontalAlignment="Right"  SelectedDate="{Binding Path=Task.SelectedTask.DeadlineDate, Mode=TwoWay}" DockPanel.Dock="Right" />
-                            <Label Margin="0 5 0 0" DockPanel.Dock="Right" HorizontalAlignment="Right">Deadline</Label>
-                        </DockPanel>
-                        <TextBox Margin="5 0 5 5" Text="{Binding Path=Task.SelectedTask.TaskDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
-
-            <!-- GridSplitter -->
-            <GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" IsEnabled="False" Width="3" Background="#FFF"/>
-
-            <!-- Task Updates -->
-            <Label Grid.Column="2" Grid.Row="1">Task Updates</Label>
-            <DataGrid Margin="5 0 20 0" Grid.Column="2" Grid.Row="2" ItemsSource="{Binding TaskUpdate.TaskUpdates}" SelectedItem="{Binding TaskUpdate.SelectedTaskUpdate, Mode=TwoWay}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Width="55" Binding="{Binding DateUpdated}" />
-                    <DataGridTemplateColumn Header="Update"  IsReadOnly="True" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataTemplate.Resources>
-                                    <helper:TaskUpdateToTruncatedStringConverter x:Key="truncatedUpdate" />
-                                </DataTemplate.Resources>
-                                <TextBlock Text="{Binding Path=TaskUpdate, Converter={StaticResource truncatedUpdate}}"  />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            
-            <StackPanel Margin="0 10 0 10" Grid.Column="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="10 0 5 0" Command="{Binding Path=TaskUpdate.AddTaskUpdateCommand}">Add Update</Button>
-                <Button Margin="5 0 20 0" Command="{Binding Path=TaskUpdate.RemoveTaskUpdateCommand}">Remove Update</Button>
-            </StackPanel>
-
-            <GroupBox Grid.Column="3" Grid.Row="4" Margin="5 0 20 0" IsEnabled="{Binding Path=TaskUpdate.HasTaskUpdateSelected, Mode=OneWay}">
-                <GroupBox.Header>
-                    <Label>Task Update</Label>
-                </GroupBox.Header>
-
-                <TextBox Margin="5" Text="{Binding TaskUpdate.SelectedTaskUpdate.TaskUpdate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MaxHeight="72" />
-            </GroupBox>
-
+        <DockPanel>
+            <!-- Top Content -->
+            <Label FontSize="24" HorizontalAlignment="Center" DockPanel.Dock="Top">Task Manager</Label>
             <!-- Bottom Content -->
-            <DockPanel Margin="0 0 20 0" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3" Width="800">
-                <Label Margin="5 0 0 0" HorizontalAlignment="Left" DockPanel.Dock="Left" Foreground="{Binding Path=ApplicationMessage.Type}" Content="{Binding Path=ApplicationMessage.Message}" />
-                <Label Margin="0 0 20 10" HorizontalAlignment="Right" DockPanel.Dock="Right" Content="{Binding Version}" />
+            <DockPanel DockPanel.Dock="Bottom">
+                <Label HorizontalAlignment="Left" DockPanel.Dock="Left" Foreground="{Binding Path=ApplicationMessage.Type}" Content="{Binding Path=ApplicationMessage.Message}" />
+                <Label HorizontalAlignment="Right" DockPanel.Dock="Right" Content="{Binding Version}" />
             </DockPanel>
-            
+            <!-- Task List and Options -->
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                <GroupBox Margin="5 0 5 0">
+                    <GroupBox.Header>
+                        <Label>Task List</Label>
+                    </GroupBox.Header>
+                    <StackPanel Orientation="Vertical">
+                        <!-- Task List -->
+                        <DataGrid ItemsSource="{Binding Task.TaskList}" SelectedItem="{Binding Task.SelectedTask, Mode=TwoWay}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Priority"  IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DataTemplate.Resources>
+                                                <helper:PriorityToImageConverter x:Key="imageConverter" />
+                                            </DataTemplate.Resources>
+                                            <Image Source="{Binding Path=TaskPriority, Converter={StaticResource imageConverter}}" Width="32" Height="32" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Status"  IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DataTemplate.Resources>
+                                                <helper:StatusToImageConverter x:Key="imageConverter" />
+                                            </DataTemplate.Resources>
+                                            <Image Source="{Binding Path=TaskStatus, Converter={StaticResource imageConverter}}" Width="32" Height="32" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Deadline"  IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Deadline}" Margin="0 8 0 8" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Task"  IsReadOnly="True" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DataTemplate.Resources>
+                                                <helper:TaskDetailToTruncatedStringConverter x:Key="truncatedDetail" />
+                                            </DataTemplate.Resources>
+                                            <TextBlock Text="{Binding Path=TaskDetail, Converter={StaticResource truncatedDetail}}" Margin="0 8 0 8"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Margin="0 5 0 5" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Margin="10 0 5 0" Command="{Binding Path=Task.AddTaskCommand}">Add Task</Button>
+                            <Button Margin="5 0 5 0" Command="{Binding Path=Task.RemoveTaskCommand}">Remove Task</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <!-- New Task Options -->
+                <GroupBox Margin="5 0 5 0" IsEnabled="{Binding Path=Task.HasTaskSelected, Mode=OneWay}">
+                    <GroupBox.Header>
+                        <Label>Task</Label>
+                    </GroupBox.Header>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                        <DockPanel>
+                            <DockPanel DockPanel.Dock="Left">
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                                    <Label Foreground="#FFFFFF">Priority</Label>
+                                    <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel DockPanel.Dock="Right">
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                    <Label Foreground="#FFFFFF">Status</Label>
+                                    <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True" />
+                                </StackPanel>
+                            </DockPanel>
+                        </DockPanel>
+                        <StackPanel Orientation="Vertical">
+                            <DockPanel>
+                                <Label Margin="0 5 0 0" DockPanel.Dock="Left" HorizontalAlignment="Left">Task</Label>
+                                <DatePicker Margin="0 5 5 5" HorizontalAlignment="Right"  SelectedDate="{Binding Path=Task.SelectedTask.DeadlineDate, Mode=TwoWay}" DockPanel.Dock="Right" />
+                                <Label Margin="0 5 0 0" DockPanel.Dock="Right" HorizontalAlignment="Right">Deadline</Label>
+                            </DockPanel>
+                            <TextBox Margin="5 0 5 5" Text="{Binding Path=Task.SelectedTask.TaskDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Right">
+                <!-- Task Updates List and Options -->
+                <GroupBox Margin="5 0 5 0">
+                    <GroupBox.Header>
+                        <Label>Task Task Update</Label>
+                    </GroupBox.Header>
+                    <StackPanel Orientation="Vertical">
+                        <DataGrid ItemsSource="{Binding TaskUpdate.TaskUpdates}" SelectedItem="{Binding TaskUpdate.SelectedTaskUpdate, Mode=TwoWay}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Date" Width="55" Binding="{Binding DateUpdated}" />
+                                <DataGridTemplateColumn Header="Update"  IsReadOnly="True" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DataTemplate.Resources>
+                                                <helper:TaskUpdateToTruncatedStringConverter x:Key="truncatedUpdate" />
+                                            </DataTemplate.Resources>
+                                            <TextBlock Text="{Binding Path=TaskUpdate, Converter={StaticResource truncatedUpdate}}"  />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Margin="0 5 0 5" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Margin="10 0 5 0" Command="{Binding Path=TaskUpdate.AddTaskUpdateCommand}">Add Update</Button>
+                            <Button Margin="5 0 5 0" Command="{Binding Path=TaskUpdate.RemoveTaskUpdateCommand}">Remove Update</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <!-- Task Update Edit -->
+                <GroupBox Margin="5 0 5 0" IsEnabled="{Binding Path=TaskUpdate.HasTaskUpdateSelected, Mode=OneWay}">
+                    <GroupBox.Header>
+                        <Label>Task Update</Label>
+                    </GroupBox.Header>
+                    <TextBox Margin="5" Text="{Binding TaskUpdate.SelectedTaskUpdate.TaskUpdate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="78" />
+                </GroupBox>
+            </StackPanel>
 
-        </Grid>
+        </DockPanel>
+
 
     </DataTemplate>
 
