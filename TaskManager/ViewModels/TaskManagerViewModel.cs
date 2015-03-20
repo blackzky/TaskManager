@@ -56,6 +56,8 @@ namespace TaskManager.ViewModels
             tasks = objectToSerialize.Tasks;
             taskUpdates = objectToSerialize.TaskUpdates;
 
+            TaskModel.SetBaseID(objectToSerialize.LastTaskID);
+            TaskUpdateModel.SetBaseID(objectToSerialize.LastTaskUpdateID);
 
             if (tasks != null && tasks.Count > 0)
             {
@@ -105,6 +107,9 @@ namespace TaskManager.ViewModels
             PersistentData objectToSerialize = new PersistentData();
             objectToSerialize.Tasks = tasks;
             objectToSerialize.TaskUpdates = taskUpdates;
+
+            objectToSerialize.LastTaskID = TaskModel.GetBaseID();
+            objectToSerialize.LastTaskUpdateID = TaskUpdateModel.GetBaseID();
 
             Serializer.SerializeObject(ResourceManager.PERSISTENT_DATA_PATH_FILENAME, objectToSerialize);
         }

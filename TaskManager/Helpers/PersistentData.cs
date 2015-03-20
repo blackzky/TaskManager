@@ -11,6 +11,20 @@ namespace TaskManager.Helpers
         private List<PersistentTaskData> tasks;
         private List<PersistentTaskUpdateData> taskUpdates;
 
+        private int lastTaskID;
+        private int lastTaskUpdateID;
+
+        public int LastTaskID
+        {
+            get { return lastTaskID; }
+            set { lastTaskID = value; }
+        }
+        public int LastTaskUpdateID
+        {
+            get { return lastTaskUpdateID; }
+            set { lastTaskUpdateID = value; }
+        }
+
         public List<PersistentTaskData> Tasks
         {
             get { return this.tasks; }
@@ -28,12 +42,18 @@ namespace TaskManager.Helpers
 
         public PersistentData(SerializationInfo info, StreamingContext ctxt)
         {
+            lastTaskID = (int)info.GetValue("LastTaskID", typeof(int));
+            lastTaskUpdateID = (int)info.GetValue("LastTaskUpdateID", typeof(int));
+
             tasks = (List<PersistentTaskData>)info.GetValue("Tasks", typeof(List<PersistentTaskData>));
             taskUpdates = (List<PersistentTaskUpdateData>)info.GetValue("TaskUpdates", typeof(List<PersistentTaskUpdateData>));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
+            info.AddValue("LastTaskID", lastTaskID);
+            info.AddValue("LastTaskUpdateID", lastTaskUpdateID);
+
             info.AddValue("Tasks", tasks);
             info.AddValue("TaskUpdates", taskUpdates);
         }

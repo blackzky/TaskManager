@@ -25,7 +25,14 @@ namespace TaskManager
             taskUpdate = _taskUpdate;
             dateUpdated = (_dateUpdated == DateTime.MinValue ? DateTime.Now : _dateUpdated);
         }
-
+        public static int GetBaseID()
+        {
+            return BASE_ID;
+        }
+        public static void SetBaseID(int base_id)
+        {
+            BASE_ID = base_id;
+        }
         public int ID
         {
             get { return id; }
