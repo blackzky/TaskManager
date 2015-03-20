@@ -9,21 +9,18 @@ namespace TaskManager.Helpers
     public class PersistentData : ISerializable
     {
         private List<PersistentTaskData> tasks;
-        //private List<PersistentTaskUpdateData> tasksUpdates;
+        private List<PersistentTaskUpdateData> taskUpdates;
 
         public List<PersistentTaskData> Tasks
         {
             get { return this.tasks; }
             set { this.tasks = value; }
         }
-
-        /*
-        public List<PersistentTaskUpdateData> TasksUpdates
+        public List<PersistentTaskUpdateData> TaskUpdates
         {
-            get { return this.tasksUpdates; }
-            set { this.tasksUpdates = value; }
+            get { return this.taskUpdates; }
+            set { this.taskUpdates = value; }
         }
-         */
 
         public PersistentData()
         { 
@@ -31,21 +28,58 @@ namespace TaskManager.Helpers
 
         public PersistentData(SerializationInfo info, StreamingContext ctxt)
         {
-            System.Diagnostics.Debug.WriteLine("--PersistentData--");
             tasks = (List<PersistentTaskData>)info.GetValue("Tasks", typeof(List<PersistentTaskData>));
+            taskUpdates = (List<PersistentTaskUpdateData>)info.GetValue("TaskUpdates", typeof(List<PersistentTaskUpdateData>));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
-            System.Diagnostics.Debug.WriteLine("--PersistentData.GetObjectData--");
             info.AddValue("Tasks", tasks);
+            info.AddValue("TaskUpdates", taskUpdates);
         }
     }
 
     [Serializable()]
-    public class PersistentTaskUpdateData
+    public class PersistentTaskUpdateData : ISerializable
     {
+        private int id;
+        private int taskId;
+        private string taskUpdateDetail;
+        private DateTime dateUpdated;
 
+        public int ID { get { return id; } }
+        public int TaskID { get { return taskId; } }
+        public string TaskUpdateDetail { get { return taskUpdateDetail; } }
+        public DateTime DateUpdated { get { return dateUpdated; } }
+
+        public PersistentTaskUpdateData() 
+        {
+
+        }
+
+        public PersistentTaskUpdateData(SerializationInfo info, StreamingContext ctxt)
+        {
+            id = (int)info.GetValue("ID", typeof(int));
+            taskId = (int)info.GetValue("TaskID", typeof(int));
+            taskUpdateDetail = (string)info.GetValue("TaskUpdateDetail", typeof(string));
+            dateUpdated = (DateTime)info.GetValue("DateUpdated", typeof(DateTime));
+        }
+
+        public PersistentTaskUpdateData(int _id, int _taskID, string _taskUpdateDetail, DateTime _dateUpdated) 
+        {
+            id = _id;
+            taskId = _taskID;
+            taskUpdateDetail = _taskUpdateDetail;
+            dateUpdated = _dateUpdated;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("ID", id);
+            info.AddValue("TaskID", taskId);
+            info.AddValue("TaskUpdateDetail", taskUpdateDetail);
+            info.AddValue("DateUpdated", dateUpdated);
+        }
     }
 
     [Serializable()]

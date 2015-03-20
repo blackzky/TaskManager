@@ -14,11 +14,16 @@ namespace TaskManager
         private string deadline;
 
         public TaskUpdateModel(int _taskID)
+            : this(BASE_ID++, _taskID, "Update", DateTime.MinValue)
         {
-            id = BASE_ID++;
+        }
+
+        public TaskUpdateModel(int _id, int _taskID, string _taskUpdate, DateTime _dateUpdated)
+        {
+            id = _id;
             taskID = _taskID;
-            taskUpdate = "Update";
-            dateUpdated = DateTime.Now;
+            taskUpdate = _taskUpdate;
+            dateUpdated = (_dateUpdated == DateTime.MinValue ? DateTime.Now : _dateUpdated);
         }
 
         public int ID

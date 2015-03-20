@@ -22,7 +22,6 @@ namespace TaskManager.ViewModels
         public TaskUpdateViewModel(TaskManagerViewModel taskManager)
         {
             _taskManager = taskManager;
-            _allTaskUpdates = new ObservableCollection<TaskUpdateModel>();
         }
         public TaskUpdateModel SelectedTaskUpdate
         {
@@ -43,6 +42,14 @@ namespace TaskManager.ViewModels
             {
                 if (_taskUpdates == null) { _taskUpdates = new ObservableCollection<TaskUpdateModel>(); }
                 return _taskUpdates;
+            }
+        }
+        public ObservableCollection<TaskUpdateModel> AllTaskUpdates
+        {
+            get
+            {
+                if (_allTaskUpdates == null) { _allTaskUpdates = new ObservableCollection<TaskUpdateModel>(); }
+                return _allTaskUpdates;
             }
         }
 
@@ -75,11 +82,13 @@ namespace TaskManager.ViewModels
             }
         }
 
+
+
         public void AddTaskUpdate()
         {
             TaskUpdateModel newTaskUpdate = new TaskUpdateModel(_taskManager.Task.SelectedTask.ID);
             TaskUpdates.Add(newTaskUpdate);
-            _allTaskUpdates.Add(newTaskUpdate);
+            AllTaskUpdates.Add(newTaskUpdate);
             SelectedTaskUpdate = newTaskUpdate;
             _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "New task update added.");
         }

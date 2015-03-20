@@ -28,9 +28,7 @@ namespace TaskManager.ViewModels
             }
             catch (System.Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-                ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Failed to load data. " + ResourceManager.PERSISTENT_DATA_PATH_FILENAME + " was not found.");
+                ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Failed to load data.");
             }
         }
 
@@ -51,14 +49,29 @@ namespace TaskManager.ViewModels
         private void LoadData()
         {
             List<PersistentTaskData> tasks = new List<PersistentTaskData>();
+            List<PersistentTaskUpdateData> taskUpdates = new List<PersistentTaskUpdateData>();
 
             PersistentData objectToSerialize = new PersistentData();
             objectToSerialize = Serializer.DeSerializeObject(ResourceManager.PERSISTENT_DATA_PATH_FILENAME);
             tasks = objectToSerialize.Tasks;
+            taskUpdates = objectToSerialize.TaskUpdates;
 
-            foreach (PersistentTaskData task in tasks)
+
+            if (tasks != null && tasks.Count > 0)
             {
-                Task.TaskList.Add(new TaskModel(task.ID, task.TaskPriority, task.TaskStatus, task.TaskDetail, task.DeadlineDate));
+                foreach (PersistentTaskData task in tasks)
+                {
+                    Task.TaskList.Add(new TaskModel(task.ID, task.TaskPriority, task.TaskStatus, task.TaskDetail, task.DeadlineDate));
+                }
+            }
+
+            if (taskUpdates != null && taskUpdates.Count > 0)
+            {
+                foreach (PersistentTaskUpdateData taskUpdate in taskUpdates)
+                {
+                    TaskUpdate.AllTaskUpdates.Add(new TaskUpdateModel(taskUpdate.ID, taskUpdate.TaskID, taskUpdate.TaskUpdateDetail, taskUpdate.DateUpdated));
+                }
+
             }
 
             if (Task.TaskList.Count == 0) 
@@ -77,17 +90,23 @@ namespace TaskManager.ViewModels
             ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Application closing. Saving data...");
 
             List<PersistentTaskData> tasks = new List<PersistentTaskData>();
+            List<PersistentTaskUpdateData> taskUpdates = new List<PersistentTaskUpdateData>();
 
             foreach (TaskModel task in Task.TaskList)
             {
                 tasks.Add(new PersistentTaskData(task.ID, task.TaskPriority, task.TaskStatus, task.TaskDetail, task.DeadlineDate));
             }
 
+            foreach (TaskUpdateModel taskUpdated in TaskUpdate.AllTaskUpdates)
+            {
+                taskUpdates.Add(new PersistentTaskUpdateData(taskUpdated.ID, taskUpdated.TaskID, taskUpdated.TaskUpdate, taskUpdated.DateUpdatedDate));
+            }
+
             PersistentData objectToSerialize = new PersistentData();
             objectToSerialize.Tasks = tasks;
+            objectToSerialize.TaskUpdates = taskUpdates;
 
             Serializer.SerializeObject(ResourceManager.PERSISTENT_DATA_PATH_FILENAME, objectToSerialize);
-
         }
 
         public TaskViewModel Task
