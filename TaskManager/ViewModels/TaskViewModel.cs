@@ -23,7 +23,6 @@ namespace TaskManager
             _taskManager = taskManager;
         }
 
-        int count = 0;
         public TaskModel SelectedTask
         {
             get { return _selectedTask; }

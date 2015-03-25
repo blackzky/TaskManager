@@ -10,7 +10,6 @@ namespace TaskManager.ViewModels
 {
     public class TaskManagerViewModel : ObservableObject
     {
-        private string _details;
         private ApplicationMessageModel _applicationMessage;
 
         private TaskViewModel _task;
@@ -19,19 +18,17 @@ namespace TaskManager.ViewModels
         public TaskManagerViewModel()
         {
             Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
-            Details = "";
             ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Loading...");
 
             try
             {
                 LoadData();
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Failed to load data.");
             }
         }
-
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -144,19 +141,6 @@ namespace TaskManager.ViewModels
             }
         }
 
-        // Helper Methods
-        public string Details
-        {
-            get { return _details; }
-            set
-            {
-                if (value != _details)
-                {
-                    _details = value;
-                    OnPropertyChanged("Details");
-                }
-            }
-        }
         public ApplicationMessageModel ApplicationMessage
         {
             get { return _applicationMessage; }

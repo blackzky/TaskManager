@@ -45,7 +45,7 @@
                     </GroupBox.Header>
                     <StackPanel Orientation="Vertical">
                         <!-- Task List -->
-                        <DataGrid ItemsSource="{Binding Task.TaskList}" SelectedItem="{Binding Task.SelectedTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True">
+                        <DataGrid ItemsSource="{Binding Task.TaskList}" SelectedItem="{Binding Task.SelectedTask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="Priority"  IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -168,7 +168,6 @@
             </StackPanel>
 
         </DockPanel>
-
 
     </DataTemplate>
 
