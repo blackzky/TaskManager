@@ -33,8 +33,8 @@ namespace TaskManager
                 {
                     _selectedTask = value;
                     OnPropertyChanged("SelectedTask");
-                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task changed " + (count++) + " P: " + _selectedTask.TaskPriority);
                     HasTaskSelected = (_selectedTask != null);
+                    _taskManager.TaskUpdate.UpdateTaskUpdatesList();
                 }
             }
         }
@@ -128,7 +128,6 @@ namespace TaskManager
                 if (value != _hasTaskSelected)
                 {
                     _hasTaskSelected = value;
-                    _taskManager.TaskUpdate.UpdateTaskUpdatesList();
                     OnPropertyChanged("HasTaskSelected");
                 }
             }

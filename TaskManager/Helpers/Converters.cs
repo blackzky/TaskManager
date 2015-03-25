@@ -119,12 +119,12 @@ namespace TaskManager.Helpers
                 }
                 else
                 {
-                    return TaskModel.Priority.LOW;
+                    return TaskModel.Priority.Low;
                 }
             }
             catch (ArgumentException)
             {
-                return TaskModel.Priority.LOW;
+                return TaskModel.Priority.Low;
             }
         }
     }
@@ -153,12 +153,12 @@ namespace TaskManager.Helpers
                 }
                 else
                 {
-                    return TaskModel.Status.NOT_STARTED;
+                    return TaskModel.Status.Unstarted;
                 }
             }
             catch (ArgumentException)
             {
-                return TaskModel.Status.NOT_STARTED;
+                return TaskModel.Status.Unstarted;
             }
         }
     }

@@ -128,7 +128,7 @@
   <ItemGroup>
     <Resource Include="Resources\Images\Status-CANCELLED.png" />
     <Resource Include="Resources\Images\Status-COMPLETED.png" />
-    <Resource Include="Resources\Images\Status-NOT_STARTED.png" />
+    <Resource Include="Resources\Images\Status-UNSTARTED.png" />
     <Resource Include="Resources\Images\Status-WORKING.png" />
   </ItemGroup>
   <ItemGroup>

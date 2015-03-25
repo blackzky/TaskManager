@@ -17,23 +17,23 @@ namespace TaskManager
 
         public enum Status : int
         {
-            NOT_STARTED = 0,
-            WORKING = 1,
-            COMPLETED = 2,
-            CANCELLED = 3
+            Unstarted = 0,
+            Working = 1,
+            Completed = 2,
+            Cancelled = 3
         }
         public enum Priority : int
         {
-            LOW = 0,
-            MEDIUM = 1,
-            HIGH = 2
+            Low = 0,
+            Medium = 1,
+            High = 2
         }
         
         public IEnumerable<string> PriorityEnum { get; set; }
         public IEnumerable<string> StatusEnum { get; set; }
 
         public TaskModel()
-            : this(BASE_ID++, Priority.LOW, Status.NOT_STARTED, "Task", DateTime.MinValue) { }
+            : this(BASE_ID++, Priority.Low, Status.Unstarted, "Task", DateTime.MinValue) { }
 
         //<summary>
         // For Persistent Data.
