@@ -101,14 +101,20 @@
                         <DockPanel>
                             <DockPanel DockPanel.Dock="Left">
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                                    <StackPanel.Resources>
+                                        <helper:PriorityToStringConverter x:Key="priorityEnumConverter" />
+                                    </StackPanel.Resources>
                                     <Label Foreground="#FFFFFF">Priority</Label>
-                                    <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True" />
+                                    <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Converter={StaticResource priorityEnumConverter}}" />
                                 </StackPanel>
                             </DockPanel>
                             <DockPanel DockPanel.Dock="Right">
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                    <StackPanel.Resources>
+                                        <helper:StatusToStringConverter x:Key="statusEnumConverter" />
+                                    </StackPanel.Resources>
                                     <Label Foreground="#FFFFFF">Status</Label>
-                                    <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True" />
+                                    <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Converter={StaticResource statusEnumConverter}}" />
                                 </StackPanel>
                             </DockPanel>
                         </DockPanel>

@@ -23,6 +23,7 @@ namespace TaskManager
             _taskManager = taskManager;
         }
 
+        int count = 0;
         public TaskModel SelectedTask
         {
             get { return _selectedTask; }
@@ -31,8 +32,9 @@ namespace TaskManager
                 if (value != _selectedTask)
                 {
                     _selectedTask = value;
-                    HasTaskSelected = (_selectedTask != null);
                     OnPropertyChanged("SelectedTask");
+                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task changed " + (count++) + " P: " + _selectedTask.TaskPriority);
+                    HasTaskSelected = (_selectedTask != null);
                 }
             }
         }
