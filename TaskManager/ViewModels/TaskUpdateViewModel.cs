@@ -92,7 +92,6 @@ namespace TaskManager.ViewModels
             SelectedTaskUpdate = newTaskUpdate;
             _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "New task update added.");
         }
-        /* Incomplete */
         public void RemoveTask()
         {
             if (SelectedTaskUpdate == null)
@@ -101,7 +100,9 @@ namespace TaskManager.ViewModels
             }
             else
             {
-                // Show Confirmation Box First
+                System.Windows.MessageBoxResult removeChoice = System.Windows.MessageBox.Show(System.Windows.Application.Current.MainWindow, "Are you sure you want to remove task update?", "Remove Task Update", System.Windows.MessageBoxButton.YesNoCancel);
+                if (removeChoice != System.Windows.MessageBoxResult.Yes) return;
+
                 if (_allTaskUpdates.Remove(SelectedTaskUpdate))
                 {
                     UpdateTaskUpdatesList();

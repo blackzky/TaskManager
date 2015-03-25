@@ -37,7 +37,20 @@ namespace TaskManager.ViewModels
         {
             try
             {
-                SaveData();
+                if (Task.TaskList.Count == 0)
+                {
+                    MessageBoxResult exitChoice = MessageBox.Show(Application.Current.MainWindow, "Task list is empty, do you want to save empty list?", "", MessageBoxButton.YesNoCancel);
+
+                    switch (exitChoice)
+                    {
+                        case MessageBoxResult.Yes: SaveData(); break;
+                        case MessageBoxResult.Cancel: e.Cancel = true; break;
+                        case MessageBoxResult.No: default: break;
+                    }
+                }
+                else {
+                    SaveData(); 
+                }
             }
             catch(System.Exception ex)
             {

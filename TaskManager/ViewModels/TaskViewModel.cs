@@ -32,7 +32,6 @@ namespace TaskManager
                 {
                     _selectedTask = value;
                     HasTaskSelected = (_selectedTask != null);
-                    _taskManager.TaskUpdate.UpdateTaskUpdatesList();
                     OnPropertyChanged("SelectedTask");
                 }
             }
@@ -84,7 +83,6 @@ namespace TaskManager
             _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "New task added");
             SelectedTask = newTask;
         }
-        /* Incomplete */
         public void RemoveTask()
         {
             if (SelectedTask == null)
@@ -93,7 +91,9 @@ namespace TaskManager
             }
             else
             {
-                // Show Confirmation Box First
+                System.Windows.MessageBoxResult removeChoice = System.Windows.MessageBox.Show(System.Windows.Application.Current.MainWindow, "Are you sure you want to remove task?", "Remove Task", System.Windows.MessageBoxButton.YesNoCancel);
+                if (removeChoice != System.Windows.MessageBoxResult.Yes) return;
+
                 int taskID = SelectedTask.ID;
                 if (TaskList.Remove(SelectedTask))
                 {
