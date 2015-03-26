@@ -82,8 +82,6 @@ namespace TaskManager.ViewModels
             }
         }
 
-
-
         public void AddTaskUpdate()
         {
             TaskUpdateModel newTaskUpdate = new TaskUpdateModel(_taskManager.Task.SelectedTask.ID);
@@ -115,6 +113,7 @@ namespace TaskManager.ViewModels
                 }
             }
         }
+        
         public int RemoveAllUpdatesOfTask(int taskID)
         {
             int count = 0;

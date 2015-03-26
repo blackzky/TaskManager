@@ -18,6 +18,8 @@ namespace TaskManager
 
         private bool _hasTaskSelected;
 
+        private bool _taskListUpdated = false;
+
         public TaskViewModel(TaskManagerViewModel taskManager)
         {
             _taskManager = taskManager;
@@ -41,10 +43,7 @@ namespace TaskManager
         {
             get 
             {
-                if (_taskList == null)
-                {
-                    _taskList = new ObservableCollection<TaskModel>();
-                }
+                if (_taskList == null) _taskList = new ObservableCollection<TaskModel>();
                 return _taskList;
             }
         }
@@ -80,8 +79,10 @@ namespace TaskManager
         public void AddTask ()
         {
             TaskModel newTask = new TaskModel();
+            newTask.PropertyChanged += TaskModel_PropertyChanged;
             TaskList.Add(newTask);
             _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "New task added");
+            TaskListUpdated = true;
             SelectedTask = newTask;
         }
         public void RemoveTask()
@@ -96,9 +97,11 @@ namespace TaskManager
                 if (removeChoice != System.Windows.MessageBoxResult.Yes) return;
 
                 int taskID = SelectedTask.ID;
+                SelectedTask.PropertyChanged -= TaskModel_PropertyChanged;
                 if (TaskList.Remove(SelectedTask))
                 {
                     int updatesRemoved = 0;
+                    TaskListUpdated = true;
                     SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
                     updatesRemoved = _taskManager.TaskUpdate.RemoveAllUpdatesOfTask(taskID);
 
@@ -119,7 +122,21 @@ namespace TaskManager
                 }
             }
         }
-
+        
+        public bool TaskListUpdated
+        {
+            get { return _taskListUpdated; }
+            set
+            {
+                if (value != _taskListUpdated)
+                {
+                    _taskListUpdated = value;
+                    SortList();
+                    _taskListUpdated = false;
+                    OnPropertyChanged("TaskListUpdated");
+                }
+            }
+        }
         public bool HasTaskSelected {
             get { return _hasTaskSelected; }
             set
@@ -130,6 +147,50 @@ namespace TaskManager
                     OnPropertyChanged("HasTaskSelected");
                 }
             }
+        }
+
+        //<summary>
+        // This function will compare Task by Priority
+        // Returns: int
+        //      -1 = X < Y
+        //       0 = X == Y
+        //       1 = X > Y
+        //</summary>
+        public int CompareByPriority (TaskModel x, TaskModel y)
+        {
+            if (x == null || y == null) return 0;
+
+            TaskModel.Priority xp = x.TaskPriority;
+            TaskModel.Priority yp = y.TaskPriority;
+            if (xp == yp)
+            {
+                return 0;
+            }
+            else
+            {
+                if (xp == TaskModel.Priority.Low) return -1;
+                else if (xp == TaskModel.Priority.Medium && yp == TaskModel.Priority.Low) return 1;
+                else if (xp == TaskModel.Priority.Medium && yp == TaskModel.Priority.High) return -1;
+                else if (xp == TaskModel.Priority.High) return 1;
+                else return 0;
+            }
+        }
+        private void SortList()
+        {
+            System.Collections.Generic.List<TaskModel> myList = new System.Collections.Generic.List<TaskModel>(_taskList);
+            myList.Sort(CompareByPriority);
+            myList.Reverse();
+
+            TaskList.Clear();
+            foreach (TaskModel task in myList) 
+            {
+                TaskList.Add(task);
+            }
+        }
+
+        private void TaskModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "TaskPriority") TaskListUpdated = true;
         }
     }
 }

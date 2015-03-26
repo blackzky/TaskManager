@@ -110,6 +110,7 @@ namespace TaskManager.Helpers
         }
         public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null) return TaskModel.Priority.Low;
             try
             {
                 TaskModel.Priority priority = (TaskModel.Priority)Enum.Parse(typeof(TaskModel.Priority), (string)value);
@@ -144,6 +145,7 @@ namespace TaskManager.Helpers
         }
         public object ConvertBack(object value, System.Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null) return TaskModel.Status.Unstarted;
             try
             {
                 TaskModel.Status status = (TaskModel.Status)Enum.Parse(typeof(TaskModel.Status), (string)value);
