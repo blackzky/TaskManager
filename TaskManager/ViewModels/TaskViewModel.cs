@@ -217,7 +217,6 @@ namespace TaskManager
             foreach (TaskModel task in myList) 
             {
                 _filtered = IsFiltered(task);
-                System.Diagnostics.Debug.WriteLine(string.Format("[{1}] Filtered: {0} [{2}][{3}]", _filtered, task.ID, GetIntBinaryString(Filter), GetIntBinaryString(_filterList[task.TaskPriority.ToString()])));
                 if (_filtered)
                 {
                     task.PropertyChanged += TaskModel_PropertyChanged;
@@ -233,8 +232,8 @@ namespace TaskManager
                 int priorityFilter = _filterList[task.TaskPriority.ToString()];
                 int statusFilter = _filterList[task.TaskStatus.ToString()];
 
-                if ((priorityFilter & Filter) > 0) return true;
                 if ((statusFilter & Filter) > 0) return true;
+                if ((priorityFilter & Filter) > 0) return true;
             }
             catch (System.Exception)
             {
@@ -280,6 +279,17 @@ namespace TaskManager
         {
             if (e.PropertyName == "TaskPriority") TaskListUpdated = true;
             if (e.PropertyName == "TaskStatus") TaskListUpdated = true;
+            if (e.PropertyName == "TaskDetail")
+            {
+                if (SelectedTask != null && SelectedTask.TaskDetail == "")
+                {
+                    _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "Task Detail should not be empty.");
+                }
+                else
+                {
+                    if (_taskManager.ApplicationMessage.Message != "") _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "");
+                }
+            }
         }
     }
 }

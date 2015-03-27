@@ -148,7 +148,7 @@
                                 <DatePicker Margin="0 5 5 5" HorizontalAlignment="Right"  SelectedDate="{Binding Path=Task.SelectedTask.DeadlineDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" />
                                 <Label Margin="0 5 0 0" DockPanel.Dock="Right" HorizontalAlignment="Right">Deadline</Label>
                             </DockPanel>
-                            <TextBox Margin="5 0 5 5" Text="{Binding Path=Task.SelectedTask.TaskDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox Margin="5 0 5 5" Text="{Binding Path=Task.SelectedTask.TaskDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="380" />
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
