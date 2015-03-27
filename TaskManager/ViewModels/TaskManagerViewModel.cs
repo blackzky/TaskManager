@@ -1,8 +1,8 @@
 ﻿using CommonUtil;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using TaskManager.Helpers;
 using TaskManager.Models;
 
@@ -14,6 +14,8 @@ namespace TaskManager.ViewModels
 
         private TaskViewModel _task;
         private TaskUpdateViewModel _taskUpdate;
+
+        private ICommand _filterTaskCommand;
 
         public TaskManagerViewModel()
         {
@@ -30,11 +32,38 @@ namespace TaskManager.ViewModels
             }
         }
 
+        public ICommand FilterTaskCommand
+        {
+            get
+            {
+                if (_filterTaskCommand == null)
+                {
+                    _filterTaskCommand = new RelayCommand(
+                        param => FilterTask(param)
+                    );
+                }
+                return _filterTaskCommand;
+            }
+        }
+        private void FilterTask(object o) 
+        {
+            Task.Filter = System.Convert.ToInt32(o.ToString(), 2);
+            if (Task.Filter == 0 && Task.AllTaskLists.Count > 0)
+            {
+                ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, string.Format("Task list is not empty. Please select a filter to show them.", Task.AllTaskLists.Count));
+            } 
+            else
+            {
+                ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, string.Format("{0} Tasks filtered out of {1}", Task.TaskList.Count, Task.AllTaskLists.Count));
+            }
+        }
+        
+
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             try
             {
-                if (Task.TaskList.Count == 0)
+                if (Task.AllTaskLists.Count == 0)
                 {
                     MessageBoxResult exitChoice = MessageBox.Show(Application.Current.MainWindow, "Task list is empty, do you want to save empty list?", "", MessageBoxButton.YesNoCancel);
 
@@ -73,7 +102,7 @@ namespace TaskManager.ViewModels
             {
                 foreach (PersistentTaskData task in tasks)
                 {
-                    Task.TaskList.Add(new TaskModel(task.ID, task.TaskPriority, task.TaskStatus, task.TaskDetail, task.DeadlineDate));
+                    Task.AllTaskLists.Add(new TaskModel(task.ID, task.TaskPriority, task.TaskStatus, task.TaskDetail, task.DeadlineDate));
                 }
             }
 
@@ -85,15 +114,22 @@ namespace TaskManager.ViewModels
                 }
 
             }
-
-            if (Task.TaskList.Count == 0) 
+            Task.Filter = 127;
+            if (Task.AllTaskLists.Count == 0) 
             {
                 ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Task List Empty. Add a Task to start.");
             }
             else
             {
-                Task.SelectedTask = Task.TaskList[0];
-                ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "Application Loaded.");
+                Task.SelectedTask = Task.AllTaskLists[0];
+                ApplicationMessage = new ApplicationMessageModel(
+                    ApplicationMessageModel.TYPE.INFO, 
+                    string.Format(
+                        "{0} Tasks was loaded. {1}", 
+                        Task.AllTaskLists.Count, 
+                        (Task.TaskList.Count == Task.AllTaskLists.Count ? "" : string.Format("Showing {0} filtered tasks.", Task.TaskList.Count))
+                    )
+                );
             }
         }
 
@@ -104,7 +140,7 @@ namespace TaskManager.ViewModels
             List<PersistentTaskData> tasks = new List<PersistentTaskData>();
             List<PersistentTaskUpdateData> taskUpdates = new List<PersistentTaskUpdateData>();
 
-            foreach (TaskModel task in Task.TaskList)
+            foreach (TaskModel task in Task.AllTaskLists)
             {
                 tasks.Add(new PersistentTaskData(task.ID, task.TaskPriority, task.TaskStatus, task.TaskDetail, task.DeadlineDate));
             }

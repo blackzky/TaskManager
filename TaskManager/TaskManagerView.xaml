@@ -26,6 +26,12 @@
                 <Setter Property="BorderBrush" Value="White" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
+            <Style TargetType="{x:Type ToggleButton}">
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Background" Value="White" />
+            </Style>
+            
         </DataTemplate.Resources>
         <DockPanel>
             <!-- Top Content -->
@@ -86,10 +92,28 @@
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <StackPanel Margin="0 5 0 5" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Margin="10 0 5 0" Command="{Binding Path=Task.AddTaskCommand}">Add Task</Button>
-                            <Button Margin="5 0 5 0" Command="{Binding Path=Task.RemoveTaskCommand}">Remove Task</Button>
-                        </StackPanel>
+                        <DockPanel Margin="0 5 0 0">
+                            <DockPanel DockPanel.Dock="Left">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                    <Label>Filter</Label>
+                                    <UniformGrid Rows="1">
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="1000000" IsChecked="True" ToolTip="Filter Task with Low Priority"><Image Source="/Resources/Images/Priority-LOW.png" Width="16" Height="16" /></ToggleButton>
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="0100000" IsChecked="True" ToolTip="Filter Task with Medium Priority"><Image Source="/Resources/Images/Priority-MEDIUM.png" Width="16" Height="16" /></ToggleButton>
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="0010000" IsChecked="True" ToolTip="Filter Task with High Priority"><Image Source="/Resources/Images/Priority-HIGH.png" Width="16" Height="16" /></ToggleButton>
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="0001000" IsChecked="True" ToolTip="Filter Task with Unstarted Status"><Image Source="/Resources/Images/Status-UNSTARTED.png" Width="16" Height="16" /></ToggleButton>
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="0000100" IsChecked="True" ToolTip="Filter Task with Working Status"><Image Source="/Resources/Images/Status-WORKING.png" Width="16" Height="16" /></ToggleButton>
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="0000010" IsChecked="True" ToolTip="Filter Task Completed Status"><Image Source="/Resources/Images/Status-COMPLETED.png" Width="16" Height="16" /></ToggleButton>
+                                        <ToggleButton Command="{Binding FilterTaskCommand}" CommandParameter="0000001" IsChecked="True" ToolTip="Filter Task Cancelled Status"><Image Source="/Resources/Images/Status-CANCELLED.png" Width="16" Height="16" /></ToggleButton>
+                                    </UniformGrid>
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel DockPanel.Dock="Right">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Margin="10 0 5 0" Command="{Binding Path=Task.AddTaskCommand}">Add Task</Button>
+                                    <Button Margin="5 0 5 0" Command="{Binding Path=Task.RemoveTaskCommand}">Remove Task</Button>
+                                </StackPanel>
+                            </DockPanel>
+                        </DockPanel>
                     </StackPanel>
                 </GroupBox>
                 <!-- Task Options -->
@@ -105,7 +129,7 @@
                                         <helper:PriorityToStringConverter x:Key="priorityEnumConverter" />
                                     </StackPanel.Resources>
                                     <Label Foreground="#FFFFFF">Priority</Label>
-                                    <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Converter={StaticResource priorityEnumConverter}}" />
+                                    <ComboBox ItemsSource="{Binding Task.SelectedTask.PriorityEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskPriority, Mode=TwoWay, Converter={StaticResource priorityEnumConverter}}" />
                                 </StackPanel>
                             </DockPanel>
                             <DockPanel DockPanel.Dock="Right">
@@ -114,7 +138,7 @@
                                         <helper:StatusToStringConverter x:Key="statusEnumConverter" />
                                     </StackPanel.Resources>
                                     <Label Foreground="#FFFFFF">Status</Label>
-                                    <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Converter={StaticResource statusEnumConverter}}" />
+                                    <ComboBox Margin="0 0 5 0" ItemsSource="{Binding Task.SelectedTask.StatusEnum}" SelectedItem="{Binding Path=Task.SelectedTask.TaskStatus, Mode=TwoWay, Converter={StaticResource statusEnumConverter}}" />
                                 </StackPanel>
                             </DockPanel>
                         </DockPanel>
