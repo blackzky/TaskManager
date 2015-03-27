@@ -69,7 +69,6 @@ namespace TaskManager
             }
         }
         
-
         public ICommand AddTaskCommand
         {
             get
@@ -112,7 +111,7 @@ namespace TaskManager
             else
             {
                 _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.ERROR, "New task added but is not visible because of filter");
-                SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
+                SetSelectedTask();
             }
         }
         public void RemoveTask()
@@ -132,7 +131,7 @@ namespace TaskManager
                 {
                     int updatesRemoved = 0;
                     TaskListUpdated = true;
-                    SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
+                    SetSelectedTask();
                     updatesRemoved = _taskManager.TaskUpdate.RemoveAllUpdatesOfTask(taskID);
 
                     string message = "Task succefully removed. ";
@@ -219,6 +218,7 @@ namespace TaskManager
                 _filtered = IsFiltered(task);
                 if (_filtered)
                 {
+                    task.PropertyChanged -= TaskModel_PropertyChanged;
                     task.PropertyChanged += TaskModel_PropertyChanged;
                     TaskList.Add(task);
                 }
@@ -250,7 +250,7 @@ namespace TaskManager
                 _filter = _filter ^ value; /* [^ - XOR] - This will toggle the certain bit of Filter */
                 OnPropertyChanged("Filter");
                 TaskListUpdated = true;
-                SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
+                SetSelectedTask();
             }
         }
         private string GetIntBinaryString(int n)
@@ -277,8 +277,12 @@ namespace TaskManager
 
         private void TaskModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "TaskPriority") TaskListUpdated = true;
-            if (e.PropertyName == "TaskStatus") TaskListUpdated = true;
+            if (e.PropertyName == "TaskPriority" || e.PropertyName == "TaskStatus")
+            {
+                TaskModel buffer = SelectedTask;
+                TaskListUpdated = true;
+                SelectedTask = buffer;
+            }
             if (e.PropertyName == "TaskDetail")
             {
                 if (SelectedTask != null && SelectedTask.TaskDetail == "")
@@ -290,6 +294,11 @@ namespace TaskManager
                     if (_taskManager.ApplicationMessage.Message != "") _taskManager.ApplicationMessage = new ApplicationMessageModel(ApplicationMessageModel.TYPE.INFO, "");
                 }
             }
+        }
+
+        private void SetSelectedTask()
+        {
+            SelectedTask = TaskList.Count == 0 ? null : TaskList[TaskList.Count - 1];
         }
     }
 }
